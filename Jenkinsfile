@@ -8,5 +8,18 @@ node(){
    stage("Maven Build"){
    sh "mvn package"
    }
+  
+   
+
+    stage("Sonar Analysis"){
+       scannerHome = tool 'sonarqubescanner'
+       withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner"
+           
+        }
+       timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+        }
+
 
   }
